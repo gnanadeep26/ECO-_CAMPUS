@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoCampus | Sustainable Campus Twin</title>
+<style>
+:root{--bg:#f3f7f5;--card:#fff;--ink:#18312b;--muted:#688078;--green:#167d58;--mint:#dff5e9;--line:#dce9e2;--red:#c44747;--amber:#b97810;--blue:#3277b8;--shadow:0 8px 28px rgba(28,73,54,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}button,select{font:inherit}button{cursor:pointer}
+header{background:#123b2e;color:#fff;padding:22px max(22px,calc((100vw - 1250px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:22px;letter-spacing:.2px}.brand span{color:#8be0b3}.subbrand{color:#c5e5d5;font-size:12px;margin-top:4px}.headright{display:flex;align-items:center;gap:10px;font-size:12px}.live{background:#205640;border:1px solid #387a5b;border-radius:99px;padding:8px 11px}
+main{max-width:1250px;margin:24px auto;padding:0 20px 40px}.welcome{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap}.welcome h1{font-size:28px;margin:0 0 6px}.welcome p{margin:0;color:var(--muted);max-width:700px;line-height:1.5}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--green);color:white;font-weight:700}.btn.secondary{background:white;color:var(--green);border:1px solid var(--line)}.btn:focus,button:focus,select:focus{outline:3px solid #a8dfc0;outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}.kpi-label{color:var(--muted);font-size:13px}.kpi-value{font-size:28px;font-weight:800;margin:9px 0 5px}.kpi-note{font-size:12px;color:var(--muted)}.kpi-icon{float:right;font-size:22px;background:var(--mint);padding:8px;border-radius:11px}
+.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-bottom:16px}.card h2{font-size:17px;margin:0 0 5px}.card .desc{font-size:12px;color:var(--muted);margin:0 0 15px}
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px;background:#edf5ef;border-radius:13px;min-height:265px}.building{border:1px solid #b7d7c4;background:#fff;border-radius:12px;text-align:left;padding:12px;min-height:95px;color:var(--ink);position:relative}.building strong{display:block;font-size:13px;margin:7px 0 4px}.building small{color:var(--muted);font-size:11px}.building .emoji{font-size:23px}.building.normal{border-bottom:4px solid #36a56d}.building.warning{border-bottom:4px solid #e3ad42}.building.danger{border-bottom:4px solid #d55d5d}.building.selected{outline:3px solid #167d58}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:12px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.controls{display:grid;gap:14px}.control{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}.control label{font-size:13px;font-weight:650}.control output{font-weight:800;color:var(--green)}input[type=range]{grid-column:1/-1;width:100%;accent-color:var(--green)}.smallnote{font-size:11px;color:var(--muted);line-height:1.5}.status{display:inline-block;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px}.status.high{background:#ffebeb;color:#a62d2d}.status.medium{background:#fff2d6;color:#8d5b00}.status.good{background:#e1f6e9;color:#176d45}
+.alert-list{display:grid;gap:10px}.alert{display:flex;align-items:flex-start;gap:10px;padding:11px;border:1px solid var(--line);border-radius:11px}.alert .symbol{font-size:20px}.alert strong{font-size:13px}.alert p{font-size:12px;color:var(--muted);margin:4px 0 0;line-height:1.4}.alert-right{margin-left:auto;white-space:nowrap}
+.bar-row{display:grid;grid-template-columns:105px 1fr 65px;gap:9px;align-items:center;font-size:12px;margin:13px 0}.bar{height:10px;background:#eaf1ed;border-radius:99px;overflow:hidden}.fill{height:100%;border-radius:99px;background:#38a878}.fill.water{background:#4b9bd4}.fill.waste{background:#d7a342}
+.report{line-height:1.6;font-size:13px}.report h3{font-size:14px;margin:12px 0 4px}.report ul{padding-left:20px;margin:5px 0}.report li{margin:4px 0}.footer{color:var(--muted);font-size:11px;text-align:center;margin-top:22px}
+select{border:1px solid var(--line);border-radius:9px;padding:8px;background:#fff;color:var(--ink)}.sectionhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+@media(max-width:850px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr}.kpi-value{font-size:23px}.map{gap:7px;padding:8px}.building{padding:8px}.building strong{font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">🌿 Eco<span>Campus</span></div><div class="subbrand">AI-POWERED SUSTAINABLE CAMPUS · DIGITAL TWIN DEMO</div></div>
+  <div class="headright"><span class="live">● DEMO MODE · SIMULATED DATA</span><span id="clock"></span></div>
+</header>
+<main>
+  <div class="welcome">
+    <div><h1>Campus Sustainability Overview</h1><p>Monitor campus resources, explore locations on the digital twin, detect potential issues, and generate practical sustainability actions.</p></div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn secondary" onclick="resetDemo()">↺ Reset demo</button><button class="btn" onclick="generateReport()">✦ Generate report</button></div>
+  </div>
+  <section class="kpis">
+    <div class="card"><span class="kpi-icon">⚡</span><div class="kpi-label">Energy today</div><div class="kpi-value"><span id="energyKpi">128</span> <small style="font-size:13px">kWh</small></div><div class="kpi-note" id="energyNote">Within demo target</div></div>
+    <div class="card"><span class="kpi-icon">💧</span><div class="kpi-label">Water today</div><div class="kpi-value"><span id="waterKpi">3,420</span> <small style="font-size:13px">L</small></div><div class="kpi-note" id="waterNote">Usage estimate</div></div>
+    <div class="card"><span class="kpi-icon">🗑️</span><div class="kpi-label">Average bin fill</div><div class="kpi-value"><span id="wasteKpi">68</span><small style="font-size:13px">%</small></div><div class="kpi-note">Across demo locations</div></div>
+    <div class="card"><span class="kpi-icon">🚨</span><div class="kpi-label">Active issues</div><div class="kpi-value" id="issuesKpi">2</div><div class="kpi-note">Based on demo thresholds</div></div>
+  </section>
+  <div class="layout">
+    <section class="card">
+      <div class="sectionhead"><div><h2>Digital Twin · Campus Map</h2><p class="desc">Select a location to inspect its simulated status.</p></div><span class="status good">Map synced</span></div>
+      <div class="map" id="campusMap">
+        <button class="building normal selected" data-place="Library" onclick="selectPlace('Library')"><span class="emoji">📚</span><strong>Library</strong><small>Energy: normal</small></button>
+        <button class="building warning" data-place="Classroom Block" onclick="selectPlace('Classroom Block')"><span class="emoji">🏫</span><strong>Classroom Block</strong><small>Energy: review</small></button>
+        <button class="building normal" data-place="Garden" onclick="selectPlace('Garden')"><span class="emoji">🌳</span><strong>Garden</strong><small>Water: normal</small></button>
+        <button class="building danger" data-place="Canteen" onclick="selectPlace('Canteen')"><span class="emoji">🍽️</span><strong>Canteen</strong><small>Bin: near full</small></button>
+        <button class="building warning" data-place="Block A Washroom" onclick="selectPlace('Block A Washroom')"><span class="emoji">🚰</span><strong>Block A Washroom</strong><small>Water: inspect</small></button>
+        <button class="building normal" data-place="Sports Area" onclick="selectPlace('Sports Area')"><span class="emoji">🏟️</span><strong>Sports Area</strong><small>Status: normal</small></button>
+      </div>
+      <div class="legend"><span><i class="dot" style="background:#36a56d"></i>Normal</span><span><i class="dot" style="background:#e3ad42"></i>Warning</span><span><i class="dot" style="background:#d55d5d"></i>Needs attention</span></div>
+      <p class="smallnote" id="placeDetail" style="margin-top:12px">Selected: Canteen — bin fill is 92%. Schedule collection soon.</p>
+    </section>
+    <section class="card">
+      <h2>Try the simulated sensors</h2><p class="desc">Move the sliders to test how the dashboard responds.</p>
+      <div class="controls">
+        <div class="control"><label for="bin">Canteen bin fill level</label><output id="binOut">92%</output><input id="bin" type="range" min="0" max="100" value="92" oninput="updateDemo()"></div>
+        <div class="control"><label for="water">Water flow (L/min)</label><output id="waterOut">18 L/min</output><input id="water" type="range" min="0" max="30" value="18" oninput="updateDemo()"></div>
+        <div class="control"><label for="energy">Energy usage (kWh)</label><output id="energyOut">128 kWh</output><input id="energy" type="range" min="20" max="250" value="128" oninput="updateDemo()"></div>
+      </div>
+      <p class="smallnote">Demo rules: bin ≥ 80% = collection alert; water flow ≥ 15 L/min = inspect for possible leakage; energy ≥ 180 kWh = review usage. These illustrative thresholds must be calibrated for a real campus.</p>
+    </section>
+  </div>
+  <div class="layout">
+    <section class="card"><h2>Resource monitoring</h2><p class="desc">Example daily readings; not connected to real meters.</p>
+      <div class="bar-row"><span>Energy use</span><div class="bar"><div class="fill" id="energyBar" style="width:51%"></div></div><strong id="energyBarText">128 kWh</strong></div>
+      <div class="bar-row"><span>Water use</span><div class="bar"><div class="fill water" id="waterBar" style="width:57%"></div></div><strong id="waterBarText">3,420 L</strong></div>
+      <div class="bar-row"><span>Bin fill</span><div class="bar"><div class="fill waste" id="wasteBar" style="width:92%"></div></div><strong id="wasteBarText">92%</strong></div>
+      <div class="smallnote">Bars use simple demo scales to make readings easier to compare. Water use is an illustrative daily estimate derived from the selected flow value.</div>
+    </section>
+    <section class="card"><div class="sectionhead"><div><h2>Issue detection</h2><p class="desc">Alerts update when you change the sliders.</p></div><span class="status medium" id="alertCount">2 alerts</span></div><div class="alert-list" id="alerts"></div></section>
+  </div>
+  <section class="card"><div class="sectionhead"><div><h2>GenAI-style sustainability report</h2><p class="desc">A rule-based demo report based on current simulated readings.</p></div><button class="btn" onclick="generateReport()">Generate report</button></div><div class="report" id="report"><p>Click <b>Generate report</b> to turn the current demo readings into a sustainability summary and action list.</p></div><p class="smallnote">Important: This prototype uses rules and templates, not a live Generative AI service. A real GenAI API can be connected later. No savings are claimed unless measured and calculated.</p></section>
+  <div class="footer">EcoCampus student prototype · simulated data only · privacy-conscious by design</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let selected='Library';
+function fmt(n){return Math.round(n).toLocaleString('en-IN')}
+function values(){return {bin:+$('bin').value,water:+$('water').value,energy:+$('energy').value}}
+function updateDemo(){
+ const v=values(); $('binOut').textContent=v.bin+'%';$('waterOut').textContent=v.water+' L/min';$('energyOut').textContent=v.energy+' kWh';
+ $('energyKpi').textContent=fmt(v.energy);$('waterKpi').textContent=fmt(v.water*190);$('wasteKpi').textContent=v.bin;
+ $('energyNote').textContent=v.energy>=180?'Above demo threshold — review':'Within demo threshold';
+ $('waterNote').textContent=v.water>=15?'High flow — inspect':'Usage estimate';
+ $('energyBar').style.width=Math.min(100,v.energy/250*100)+'%';$('energyBarText').textContent=fmt(v.energy)+' kWh';
+ $('waterBar').style.width=Math.min(100,v.water/30*100)+'%';$('waterBarText').textContent=fmt(v.water*190)+' L';
+ $('wasteBar').style.width=v.bin+'%';$('wasteBarText').textContent=v.bin+'%';
+ const alerts=[];
+ if(v.bin>=80)alerts.push({level:'high',icon:'🗑️',title:'Canteen bin nearly full',desc:`Estimated fill is ${v.bin}%. Arrange collection to prevent overflow.`});
+ if(v.water>=15)alerts.push({level:'medium',icon:'💧',title:'Unusually high water flow',desc:`Flow is ${v.water} L/min. Inspect taps and pipes to check for possible leakage.`});
+ if(v.energy>=180)alerts.push({level:'medium',icon:'⚡',title:'Energy usage above threshold',desc:`Usage is ${v.energy} kWh. Review schedules and equipment status.`});
+ if(!alerts.length)alerts.push({level:'good',icon:'✅',title:'No demo threshold alerts',desc:'Current values are below the configured demo thresholds. Continue monitoring.'});
+ $('issuesKpi').textContent=alerts.filter(a=>a.level!=='good').length;
+ $('alertCount').textContent=alerts.filter(a=>a.level!=='good').length+' alert'+(alerts.filter(a=>a.level!=='good').length===1?'':'s');
+ $('alerts').innerHTML=alerts.map(a=>`<div class="alert"><span class="symbol">${a.icon}</span><div><strong>${a.title}</strong><p>${a.desc}</p></div><span class="status ${a.level} alert-right">${a.level==='high'?'High':a.level==='medium'?'Review':'Normal'}</span></div>`).join('');
+ const canteen=document.querySelector('[data-place="Canteen"]');canteen.className='building '+(v.bin>=80?'danger':'normal');
+ canteen.querySelector('small').textContent='Bin: '+(v.bin>=80?'near full':'normal');
+ const wash=document.querySelector('[data-place="Block A Washroom"]');wash.className='building '+(v.water>=15?'warning':'normal');wash.querySelector('small').textContent='Water: '+(v.water>=15?'inspect':'normal');
+ const cls=document.querySelector('[data-place="Classroom Block"]');cls.className='building '+(v.energy>=180?'danger':'normal');cls.querySelector('small').textContent='Energy: '+(v.energy>=180?'high':'normal');
+ if(selected==='Canteen')$('placeDetail').textContent=`Selected: Canteen — bin fill is ${v.bin}%. `+(v.bin>=80?'Schedule collection soon.':'Bin level is below the demo alert threshold.');
+ if(selected==='Block A Washroom')$('placeDetail').textContent=`Selected: Block A Washroom — water flow is ${v.water} L/min. `+(v.water>=15?'Inspect for possible leakage.':'Flow is below the demo threshold.');
+ if(selected==='Classroom Block')$('placeDetail').textContent=`Selected: Classroom Block — energy is ${v.energy} kWh. `+(v.energy>=180?'Review consumption.':'Below the demo threshold.');
+}
+function selectPlace(place){
+ selected=place;document.querySelectorAll('.building').forEach(b=>b.classList.toggle('selected',b.dataset.place===place));
+ const v=values();const messages={
+ 'Library':'Library — example location for tracking lighting and electricity use.',
+ 'Classroom Block':`Classroom Block — energy is ${v.energy} kWh. `+(v.energy>=180?'Review consumption.':'Below the demo threshold.'),
+ 'Garden':'Garden — monitor irrigation schedules and water consumption.',
+ 'Canteen':`Canteen — bin fill is ${v.bin}%. `+(v.bin>=80?'Schedule collection soon.':'Below the demo alert threshold.'),
+ 'Block A Washroom':`Block A Washroom — flow is ${v.water} L/min. `+(v.water>=15?'Inspect for possible leakage.':'Below the demo threshold.'),
+ 'Sports Area':'Sports Area — example location for lighting and water monitoring.'
+ };$('placeDetail').textContent='Selected: '+messages[place];
+}
+function generateReport(){
+ const v=values(),issues=[];
+ if(v.bin>=80)issues.push(`<li><b>Waste:</b> The canteen bin is at ${v.bin}% estimated capacity. Arrange collection and check whether collection frequency is adequate.</li>`);
+ if(v.water>=15)issues.push(`<li><b>Water:</b> Flow is ${v.water} L/min, above this demo's threshold. Inspect the system to confirm or rule out leakage.</li>`);
+ if(v.energy>=180)issues.push(`<li><b>Energy:</b> Usage is ${v.energy} kWh, above this demo's threshold. Review schedules and equipment status.</li>`);
+ if(!issues.length)issues.push('<li>No configured demo thresholds are currently exceeded. Continue monitoring and compare readings over time.</li>');
+ $('report').innerHTML=`<p><b>Summary:</b> This report uses simulated readings from the EcoCampus dashboard. It currently identifies ${issues.length===1&&issues[0].includes('No configured')?'no threshold breaches':issues.length+' item(s) for review'}.</p><h3>Findings</h3><ul>${issues.join('')}</ul><h3>Recommended next steps</h3><ul><li>Assign each issue to the responsible campus team.</li><li>Record the action taken and check the next reading.</li><li>Compare resource readings over several days before estimating savings.</li></ul><p><b>Current demo readings:</b> Energy ${v.energy} kWh; estimated water ${fmt(v.water*190)} L; bin fill ${v.bin}%; water flow ${v.water} L/min.</p><p><b>Data note:</b> These are simulated values, not measured campus data. Do not report them as real results.</p>`;
+}
+function resetDemo(){$('bin').value=92;$('water').value=18;$('energy').value=128;updateDemo();generateReport()}
+function tick(){$('clock').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}
+tick();setInterval(tick,30000);updateDemo();selectPlace('Canteen');
+</script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sustainable Campus | Digital Twin</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --green: #3fb950;
+            --red: #f85149;
+            --purple: #bc8cff;
+            --border: #30363d;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .tags {
+            margin-top: 20px;
+        }
+        .tag {
+            display: inline-block;
+            background: #21262d;
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 5px;
+            color: var(--purple);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+        .card h3 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+        .demo-section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #79c0ff;
+        }
+        .btn:disabled {
+            background: var(--border);
+            color: #8b949e;
+            cursor: not-allowed;
+        }
+        .btn-download {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--green);
+        }
+        .btn-download:hover {
+            background: rgba(63, 185, 80, 0.1);
+        }
+        .btn-upload {
+            display: inline-block;
+            background: transparent;
+            color: var(--purple);
+            border: 1px solid var(--purple);
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.2s;
+        }
+        .btn-upload:hover {
+            background: rgba(188, 140, 255, 0.1);
+        }
+        .btn-view-db {
+            background: var(--purple);
+            color: #000;
+        }
+        .btn-view-db:hover {
+            background: #d2a8ff;
+        }
+        .btn-clear-db {
+            background: transparent;
+            color: var(--red);
+            border: 1px solid var(--red);
+        }
+        .btn-clear-db:hover {
+            background: rgba(248, 81, 73, 0.1);
+        }
+        .btn-export {
+            background: transparent;
+            color: var(--green);
+            border: 1px solid var(--green);
+        }
+        .btn-export:hover {
+            background: rgba(63, 185, 80, 0.1);
+        }
+        /* DATABASE STATUS BAR */
+        .db-status {
+            background: linear-gradient(90deg, #1f6feb 0%, #bc8cff 100%);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .db-status .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #3fb950;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        .db-status.empty .status-dot {
+            background: var(--red);
+            animation: none;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .db-status span {
+            display: inline-flex;
+            align-items: center;
+        }
+        .terminal {
+            background: #000;
+            color: var(--green);
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+        }
+        .terminal .error { color: var(--red); }
+        .terminal .warn { color: #d29922; }
+        .terminal .info { color: var(--accent); }
+        .terminal .success { color: var(--green); }
+        .db-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+        .db-table th, .db-table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+            text-align: left;
+        }
+        .db-table th {
+            background: #21262d;
+            color: var(--accent);
+        }
+        .db-table tr:nth-child(even) {
+            background: #0d1117;
+        }
+        .db-table tr:hover {
+            background: #1f2937;
+        }
+        .status-critical { color: var(--red); font-weight: bold; }
+        .status-ok { color: var(--green); font-weight: bold; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-card h4 {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+        .stat-card p {
+            margin: 5px 0 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #8b949e;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌿 AI-Powered Sustainable Campus</h1>
+        <div class="subtitle">Digital Twin • Computer Vision • GenAI</div>
+        <div class="tags">
+            <span class="tag">Computer Vision</span>
+            <span class="tag">Digital Twin</span>
+            <span class="tag">GenAI</span>
+            <span class="tag">Campus</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="features">
+            <div class="card">
+                <h3>📡 Digital Twin</h3>
+                <p>Simulates real-time sensor data for energy, water, and waste management across the campus infrastructure.</p>
+            </div>
+            <div class="card">
+                <h3>👁️ Computer Vision</h3>
+                <p>Scans camera feeds using grid-based detection to identify waste accumulation in real-time.</p>
+            </div>
+            <div class="card">
+                <h3>🤖 Generative AI</h3>
+                <p>Analyzes sensor and CV data to generate actionable sustainability reports and recommendations.</p>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>⚡ Live Web Simulation</h2>
+            <p>Click below to run the simulation (converted from C to JavaScript).</p>
+
+            <!-- LIVE DATABASE STATUS BAR -->
+            <div class="db-status empty" id="dbStatus">
+                <span>
+                    <span class="status-dot"></span>
+                    💾 Website Database: <strong id="dbCount">0</strong> records stored
+                </span>
+                <span id="dbMessage" style="font-size:0.9rem; opacity:0.9;">
+                    Click "Run Simulation" to start saving data
+                </span>
+            </div>
+
+            <button class="btn" id="runBtn" onclick="runSimulation()">▶ Run Simulation</button>
+            <button class="btn btn-download" onclick="downloadCFile()">⬇ Download C Code</button>
+            <label class="btn-upload">
+                📂 Upload CSV File
+                <input type="file" id="csvUpload" accept=".csv" onchange="loadCSV(event)" hidden>
+            </label>
+            <br>
+            <button class="btn btn-view-db" onclick="viewWebsiteDB()">💾 View Website DB</button>
+            <button class="btn btn-export" onclick="exportWebsiteDB()">📥 Export Website DB as CSV</button>
+            <button class="btn btn-clear-db" onclick="clearWebsiteDB()">🗑️ Clear Website DB</button>
+            <div class="terminal" id="terminal">> System ready. Click "Run Simulation" to start...</div>
+            <div id="dbView"></div>
+        </div>
+    </div>
+
+    <footer>
+        Built for Macondo Hack Club | Problem Statement 02
+    </footer>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const runBtn = document.getElementById('runBtn');
+        const dbView = document.getElementById('dbView');
+        const dbCount = document.getElementById('dbCount');
+        const dbStatus = document.getElementById('dbStatus');
+        const dbMessage = document.getElementById('dbMessage');
+        let isRunning = false;
+
+        const DB_KEY = 'campusDB';
+
+        function log(text, className = '') {
+            const span = document.createElement('span');
+            span.textContent = text + '\n';
+            if (className) span.className = className;
+            terminal.appendChild(span);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // ==========================================
+        // UPDATE DB STATUS BAR (called after every save/clear)
+        // ==========================================
+        function updateDBStatus() {
+            const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+            dbCount.textContent = db.length;
+
+            if (db.length === 0) {
+                dbStatus.classList.add('empty');
+                dbMessage.textContent = 'Click "Run Simulation" to start saving data';
+            } else {
+                dbStatus.classList.remove('empty');
+                const lastRecord = db[db.length - 1];
+                dbMessage.textContent = `Last saved: ${lastRecord.date} ${lastRecord.time}`;
+            }
+        }
+
+        // ==========================================
+        // 1. DIGITAL TWIN
+        // ==========================================
+        class DigitalTwin {
+            constructor() {
+                this.energy_usage_kwh = 450.0;
+                this.water_usage_liters = 1200.0;
+                this.waste_bin_level_percent = 10.0;
+                this.date = 'N/A';
+                this.time_str = 'N/A';
+            }
+
+            updateSensors() {
+                this.energy_usage_kwh += (Math.random() * 50) - 20;
+                this.water_usage_liters += (Math.random() * 130) - 50;
+                this.waste_bin_level_percent += (Math.random() * 2.5) + 0.5;
+
+                if (this.waste_bin_level_percent > 100) this.waste_bin_level_percent = 100;
+
+                const now = new Date();
+                this.date = now.toISOString().split('T')[0];
+                this.time_str = now.toTimeString().split(' ')[0];
+            }
+        }
+
+        // ==========================================
+        // 2. COMPUTER VISION
+        // ==========================================
+        const GRID_SIZE = 5;
+
+        function generateCameraFeed() {
+            const grid = [];
+            for (let i = 0; i < GRID_SIZE; i++) {
+                grid[i] = [];
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    grid[i][j] = Math.random() < 0.3 ? 1 : 0;
+                }
+            }
+            return grid;
+        }
+
+        function detectWaste(grid) {
+            let wasteCount = 0;
+            let output = "\n[CV] COMPUTER VISION FEED:\n   ";
+            for (let i = 0; i < GRID_SIZE; i++) output += "---";
+            output += "\n";
+
+            for (let i = 0; i < GRID_SIZE; i++) {
+                output += "   |";
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    if (grid[i][j] === 1) {
+                        output += " X ";
+                        wasteCount++;
+                    } else {
+                        output += " . ";
+                    }
+                }
+                output += "|\n";
+            }
+            output += "   ";
+            for (let i = 0; i < GRID_SIZE; i++) output += "---";
+            output += "\n";
+
+            log(output, 'info');
+            return wasteCount;
+        }
+
+        // ==========================================
+        // 3. GENERATIVE AI
+        // ==========================================
+        function generateAIReport(twin, wasteDetected) {
+            log("\n==================================================", 'info');
+            log(`[AI] SUSTAINABILITY REPORT`, 'info');
+            log(`Date: ${twin.date} | Time: ${twin.time_str}`, 'info');
+            log("==================================================", 'info');
+
+            if (twin.energy_usage_kwh > 480.0) {
+                log(`[!] ENERGY: High usage (${twin.energy_usage_kwh.toFixed(1)} kWh)! Recommendation: Turn off unused lights in Block A.`, 'warn');
+            } else {
+                log(`[OK] ENERGY: Normal usage (${twin.energy_usage_kwh.toFixed(1)} kWh). Keep it up!`);
+            }
+
+            if (twin.water_usage_liters > 1300.0) {
+                log(`[!] WATER: Possible leakage (${twin.water_usage_liters.toFixed(1)} L)! Recommendation: Inspect restrooms on Floor 2.`, 'error');
+            } else {
+                log(`[OK] WATER: Normal usage (${twin.water_usage_liters.toFixed(1)} L).`);
+            }
+
+            if (twin.waste_bin_level_percent > 80.0 || wasteDetected > 2) {
+                log(`[!] WASTE: Critical (Bin: ${twin.waste_bin_level_percent.toFixed(1)}%, CV Detections: ${wasteDetected})! Recommendation: Dispatch cleaning crew immediately.`, 'error');
+            } else {
+                log(`[OK] WASTE: Under control (Bin: ${twin.waste_bin_level_percent.toFixed(1)}%, CV Detections: ${wasteDetected}).`);
+            }
+
+            log("==================================================\n", 'info');
+        }
+
+        // ==========================================
+        // 4. WEBSITE DATABASE
+        // ==========================================
+        function saveToWebsiteDB(twin, wasteCount) {
+            const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+
+            const status = (twin.energy_usage_kwh > 480 ||
+                            twin.water_usage_liters > 1300 ||
+                            twin.waste_bin_level_percent > 80 ||
+                            wasteCount > 2) ? 'CRITICAL' : 'OK';
+
+            db.push({
+                date: twin.date,
+                time: twin.time_str,
+                energy: parseFloat(twin.energy_usage_kwh.toFixed(1)),
+                water: parseFloat(twin.water_usage_liters.toFixed(1)),
+                waste: parseFloat(twin.waste_bin_level_percent.toFixed(1)),
+                cv: wasteCount,
+                status: status
+            });
+
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+
+            // INSTANTLY update the status bar
+            updateDBStatus();
+        }
+
+        function viewWebsiteDB() {
+            const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+
+            if (db.length === 0) {
+                dbView.innerHTML = '<p style="color:var(--red); margin-top:20px;">No records in website database yet. Run the simulation first.</p>';
+                return;
+            }
+
+            let html = `<h3 style="color:var(--purple); margin-top:30px;">💾 Website Database (localStorage)</h3>`;
+            html += `<p>Total records: <strong>${db.length}</strong></p>`;
+            html += '<table class="db-table"><thead><tr>';
+            html += '<th>#</th><th>Date</th><th>Time</th><th>Energy (kWh)</th><th>Water (L)</th><th>Waste (%)</th><th>CV</th><th>Status</th>';
+            html += '</tr></thead><tbody>';
+
+            let criticalCount = 0, totalEnergy = 0, totalWater = 0;
+
+            db.forEach((row, i) => {
+                const cls = row.status === 'CRITICAL' ? 'status-critical' : 'status-ok';
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>${row.date}</td>
+                    <td>${row.time}</td>
+                    <td>${row.energy}</td>
+                    <td>${row.water}</td>
+                    <td>${row.waste}</td>
+                    <td>${row.cv}</td>
+                    <td class="${cls}">${row.status}</td>
+                </tr>`;
+                if (row.status === 'CRITICAL') criticalCount++;
+                totalEnergy += row.energy;
+                totalWater += row.water;
+            });
+
+            html += '</tbody></table>';
+
+            html += `
+                <div class="stats-grid">
+                    <div class="stat-card"><h4>Total Records</h4><p>${db.length}</p></div>
+                    <div class="stat-card"><h4 style="color:var(--red);">Critical Alerts</h4><p style="color:var(--red);">${criticalCount}</p></div>
+                    <div class="stat-card"><h4>Avg Energy (kWh)</h4><p>${(totalEnergy / db.length).toFixed(1)}</p></div>
+                    <div class="stat-card"><h4>Avg Water (L)</h4><p>${(totalWater / db.length).toFixed(1)}</p></div>
+                </div>
+            `;
+
+            dbView.innerHTML = html;
+            dbView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function clearWebsiteDB() {
+            if (confirm('Delete all records from the website database?')) {
+                localStorage.removeItem(DB_KEY);
+                dbView.innerHTML = '<p style="color:var(--green); margin-top:20px;">✅ Website database cleared.</p>';
+                updateDBStatus();
+                log('> Website database cleared.', 'success');
+            }
+        }
+
+        function exportWebsiteDB() {
+            const db = JSON.parse(localStorage.getItem(DB_KEY) || '[]');
+            if (db.length === 0) {
+                alert('No records to export. Run the simulation first.');
+                return;
+            }
+
+            let csv = 'Date,Time,Energy_kWh,Water_L,Waste_Percent,CV_Detections,Status\n';
+            db.forEach(r => {
+                csv += `${r.date},${r.time},${r.energy},${r.water},${r.waste},${r.cv},${r.status}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'website_campus_log.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==========================================
+        // 5. MAIN DASHBOARD
+        // ==========================================
+        async function runSimulation() {
+            if (isRunning) return;
+            isRunning = true;
+            runBtn.disabled = true;
+            terminal.innerHTML = "> Starting AI-Powered Sustainable Campus Digital Twin...\n> (Web Edition)\n";
+
+            const twin = new DigitalTwin();
+
+            for (let cycle = 1; cycle <= 5; cycle++) {
+                log(`\n--- Cycle ${cycle} ---`, 'info');
+
+                twin.updateSensors();
+                log(`[Sensors] Energy=${twin.energy_usage_kwh.toFixed(1)} kWh | Water=${twin.water_usage_liters.toFixed(1)} L | Waste=${twin.waste_bin_level_percent.toFixed(1)}%`);
+
+                const grid = generateCameraFeed();
+                const wasteCount = detectWaste(grid);
+                log(`   -> Waste objects detected: ${wasteCount}`);
+
+                generateAIReport(twin, wasteCount);
+
+                saveToWebsiteDB(twin, wasteCount);
+                log(`   [DB] Record saved to website database. (Total: ${JSON.parse(localStorage.getItem(DB_KEY)).length})`, 'success');
+
+                await new Promise(r => setTimeout(r, 1500));
+            }
+
+            log("\nDemo Complete. Click '💾 View Website DB' to see all records.", 'success');
+            runBtn.disabled = false;
+            isRunning = false;
+        }
+
+        // ==========================================
+        // 6. DOWNLOAD C CODE
+        // ==========================================
+        function downloadCFile() {
+            const cCode = `#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+
+#define CSV_FILE "campus_log.csv"
+#define GRID_SIZE 5
+
+typedef struct {
+    float energy_usage_kwh;
+    float water_usage_liters;
+    float waste_bin_level_percent;
+    char date[20];
+    char time_str[20];
+} DigitalTwin;
+
+void init_twin(DigitalTwin *twin) {
+    twin->energy_usage_kwh = 450.0f;
+    twin->water_usage_liters = 1200.0f;
+    twin->waste_bin_level_percent = 10.0f;
+    strcpy(twin->date, "N/A");
+    strcpy(twin->time_str, "N/A");
+}
+
+void update_sensors(DigitalTwin *twin) {
+    twin->energy_usage_kwh += ((float)(rand() % 50) - 20.0f);
+    twin->water_usage_liters += ((float)(rand() % 130) - 50.0f);
+    twin->waste_bin_level_percent += ((float)(rand() % 25) / 10.0f + 0.5f);
+
+    if (twin->waste_bin_level_percent > 100.0f)
+        twin->waste_bin_level_percent = 100.0f;
+
+    time_t rawtime;
+    struct tm *timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    strftime(twin->date, sizeof(twin->date), "%Y-%m-%d", timeinfo);
+    strftime(twin->time_str, sizeof(twin->time_str), "%H:%M:%S", timeinfo);
+}
+
+int detect_waste(int grid[GRID_SIZE][GRID_SIZE]) {
+    int waste_count = 0;
+    printf("\\n[CV] COMPUTER VISION FEED:\\n   ");
+    for (int i = 0; i < GRID_SIZE; i++) printf("---");
+    printf("\\n");
+
+    for (int i = 0; i < GRID_SIZE; i++) {
+        printf("   |");
+        for (int j = 0; j < GRID_SIZE; j++) {
+            if (grid[i][j] == 1) {
+                printf(" X ");
+                waste_count++;
+            } else {
+                printf(" . ");
+            }
+        }
+        printf("|\\n");
+    }
+    printf("   ");
+    for (int i = 0; i < GRID_SIZE; i++) printf("---");
+    printf("\\n");
+    return waste_count;
+}
+
+void generate_camera_feed(int grid[GRID_SIZE][GRID_SIZE]) {
+    for (int i = 0; i < GRID_SIZE; i++)
+        for (int j = 0; j < GRID_SIZE; j++)
+            grid[i][j] = (rand() % 100 < 30) ? 1 : 0;
+}
+
+int csv_exists() {
+    FILE *fp = fopen(CSV_FILE, "r");
+    if (fp == NULL) return 0;
+    fclose(fp);
+    return 1;
+}
+
+void init_csv() {
+    if (!csv_exists()) {
+        FILE *fp = fopen(CSV_FILE, "w");
+        if (fp == NULL) return;
+        fprintf(fp, "Date,Time,Energy_kWh,Water_L,Waste_Percent,CV_Detections,Status\\n");
+        fclose(fp);
+        printf("[DB] Database initialized: %s\\n", CSV_FILE);
+    } else {
+        printf("[DB] Existing database found: %s\\n", CSV_FILE);
+    }
+}
+
+void save_to_csv(DigitalTwin *twin, int waste_detected) {
+    FILE *fp = fopen(CSV_FILE, "a");
+    if (fp == NULL) return;
+
+    const char *status = "OK";
+    if (twin->energy_usage_kwh > 480.0f ||
+        twin->water_usage_liters > 1300.0f ||
+        twin->waste_bin_level_percent > 80.0f ||
+        waste_detected > 2) {
+        status = "CRITICAL";
+    }
+
+    fprintf(fp, "%s,%s,%.1f,%.1f,%.1f,%d,%s\\n",
+            twin->date, twin->time_str,
+            twin->energy_usage_kwh,
+            twin->water_usage_liters,
+            twin->waste_bin_level_percent,
+            waste_detected,
+            status);
+
+    fclose(fp);
+}
+
+void view_history() {
+    FILE *fp = fopen(CSV_FILE, "r");
+    if (fp == NULL) {
+        printf("[DB] No records found. Run the simulation first.\\n");
+        return;
+    }
+
+    char line[256];
+    int count = 0;
+    int critical = 0;
+    float total_energy = 0, total_water = 0;
+
+    printf("\\n========= HISTORICAL DATABASE =========\\n");
+    while (fgets(line, sizeof(line), fp)) {
+        printf("%s", line);
+        if (count > 0) {
+            float e, w, ws;
+            int cv;
+            char status[20];
+            sscanf(line, "%*[^,],%*[^,],%f,%f,%f,%d,%19s", &e, &w, &ws, &cv, status);
+            total_energy += e;
+            total_water += w;
+            if (strcmp(status, "CRITICAL") == 0) critical++;
+        }
+        count++;
+    }
+    printf("=======================================\\n");
+    printf("[DB] Total records: %d\\n", count - 1);
+    if (count > 1) {
+        printf("[DB] Critical alerts: %d\\n", critical);
+        printf("[DB] Average Energy: %.1f kWh\\n", total_energy / (count - 1));
+        printf("[DB] Average Water: %.1f L\\n", total_water / (count - 1));
+    }
+
+    fclose(fp);
+}
+
+void generate_ai_report(DigitalTwin *twin, int waste_detected) {
+    printf("\\n==================================================\\n");
+    printf("[AI] SUSTAINABILITY REPORT\\n");
+    printf("Date: %s | Time: %s\\n", twin->date, twin->time_str);
+    printf("==================================================\\n");
+
+    if (twin->energy_usage_kwh > 480.0f)
+        printf("[!] ENERGY: High usage (%.1f kWh)! Recommendation: Turn off unused lights in Block A.\\n", twin->energy_usage_kwh);
+    else
+        printf("[OK] ENERGY: Normal usage (%.1f kWh). Keep it up!\\n", twin->energy_usage_kwh);
+
+    if (twin->water_usage_liters > 1300.0f)
+        printf("[!] WATER: Possible leakage (%.1f L)! Recommendation: Inspect restrooms on Floor 2.\\n", twin->water_usage_liters);
+    else
+        printf("[OK] WATER: Normal usage (%.1f L).\\n", twin->water_usage_liters);
+
+    if (twin->waste_bin_level_percent > 80.0f || waste_detected > 2)
+        printf("[!] WASTE: Critical (Bin: %.1f%%, CV Detections: %d)! Recommendation: Dispatch cleaning crew immediately.\\n",
+               twin->waste_bin_level_percent, waste_detected);
+    else
+        printf("[OK] WASTE: Under control (Bin: %.1f%%, CV Detections: %d).\\n",
+               twin->waste_bin_level_percent, waste_detected);
+
+    printf("==================================================\\n");
+}
+
+void run_simulation() {
+    DigitalTwin twin;
+    init_twin(&twin);
+    int grid[GRID_SIZE][GRID_SIZE];
+
+    for (int cycle = 1; cycle <= 5; cycle++) {
+        printf("\\n--- Cycle %d ---\\n", cycle);
+        update_sensors(&twin);
+        printf("[Sensors] Energy=%.1f kWh | Water=%.1f L | Waste=%.1f%%\\n",
+               twin.energy_usage_kwh, twin.water_usage_liters, twin.waste_bin_level_percent);
+        generate_camera_feed(grid);
+        int waste_count = detect_waste(grid);
+        printf("   -> Waste objects detected: %d\\n", waste_count);
+        generate_ai_report(&twin, waste_count);
+        save_to_csv(&twin, waste_count);
+        printf("[DB] Record saved to database.\\n");
+
+        #ifdef _WIN32
+            Sleep(1000);
+        #else
+            sleep(1);
+        #endif
+    }
+
+    printf("\\nDemo Complete. Data saved to %s\\n", CSV_FILE);
+}
+
+int main() {
+    srand(time(NULL));
+    printf("Starting AI-Powered Sustainable Campus Digital Twin...\\n");
+    printf("   (C Language Edition + Database)\\n\\n");
+
+    init_csv();
+
+    int choice;
+    while (1) {
+        printf("\\n===== MAIN MENU =====\\n");
+        printf("1. Run Simulation\\n");
+        printf("2. View Historical Data\\n");
+        printf("3. Exit\\n");
+        printf("Choose (1-3): ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: run_simulation(); break;
+            case 2: view_history(); break;
+            case 3: printf("Goodbye! Submit this to Macondo.\\n"); return 0;
+            default: printf("Invalid choice. Try again.\\n");
+        }
+    }
+    return 0;
+}`;
+
+            const blob = new Blob([cCode], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'ECO.c';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        // ==========================================
+        // 7. CSV UPLOAD
+        // ==========================================
+        function loadCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const rows = text.trim().split('\n').map(r => r.split(','));
+
+                if (rows.length < 2) {
+                    dbView.innerHTML = '<p style="color:var(--red); margin-top:20px;">No data rows found.</p>';
+                    return;
+                }
+
+                const headers = rows[0];
+                let html = `<h3 style="color:var(--accent); margin-top:30px;">📂 Uploaded CSV: ${file.name}</h3>`;
+                html += `<p>Total records: <strong>${rows.length - 1}</strong></p>`;
+                html += '<table class="db-table"><thead><tr>';
+
+                headers.forEach(h => html += `<th>${h.trim()}</th>`);
+                html += '</tr></thead><tbody>';
+
+                let criticalCount = 0, totalEnergy = 0, totalWater = 0;
+
+                for (let i = 1; i < rows.length; i++) {
+                    html += '<tr>';
+                    rows[i].forEach((cell, idx) => {
+                        const value = cell.trim();
+                        let cls = '';
+                        if (headers[idx] && headers[idx].trim() === 'Status') {
+                            cls = value === 'CRITICAL' ? 'status-critical' : 'status-ok';
+                        }
+                        html += `<td class="${cls}">${value}</td>`;
+                    });
+                    html += '</tr>';
+
+                    const statusIdx = headers.findIndex(h => h.trim() === 'Status');
+                    if (statusIdx !== -1 && rows[i][statusIdx] && rows[i][statusIdx].trim() === 'CRITICAL') criticalCount++;
+
+                    const eIdx = headers.findIndex(h => h.trim() === 'Energy_kWh');
+                    if (eIdx !== -1) totalEnergy += parseFloat(rows[i][eIdx]) || 0;
